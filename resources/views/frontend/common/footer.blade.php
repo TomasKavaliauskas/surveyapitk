@@ -24,7 +24,7 @@
     <script src="/assets/frontend/js/bootstrap.min.js"></script>
 	<script src="/assets/frontend/js/responsive-slider.js"></script>
 	<script src="/assets/frontend/js/wow.min.js"></script>
-	<script src="/assets/frontend/js/global.js"></script>
+	<script src="{{ mix('/js/global.js') }}"></script>
 	<script>
 	wow = new WOW(
 	 {
