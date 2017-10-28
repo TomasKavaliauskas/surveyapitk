@@ -68,7 +68,7 @@
 						</div>
 					@endforeach
 					
-					<button class="btn btn-primary" id="create-button" type="submit">Redaguoti apklausą</button>
+					<button class="btn btn-primary edit-survey" id="create-button" type="submit">Redaguoti apklausą</button>
 				</div>
 				
 			</div>

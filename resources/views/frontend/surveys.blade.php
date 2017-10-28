@@ -40,13 +40,54 @@
 									 {{ $survey->description }}
 									</p>
 									<div class="ficon">
-										<a style="color: red;" href="/surveys/{{ $survey->id }}/stats" alt="">Statistika</a>
+										<a style="color: red;" style="cursor: pointer;" href="#" data-toggle="modal" data-target="#modal-{{$survey->id}}" alt="">Statistika</a>
 										<a style="color: red;" href="/surveys/edit/{{ $survey->id }}" alt="">Redaguoti</a>
 										<a style="color: red;" href="/surveys/delete/{{ $survey->id }}" alt="">Naikinti</a> 
 									</div>
 								</div>
 							</div>
 						</div>
+						<div id="modal-{{$survey->id}}" class="modal fade" role="dialog">
+						  <div class="modal-dialog">
+
+							<!-- Modal content-->
+							<div class="modal-content">
+							  <div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Statistika</h4>
+							  </div>
+							  <div class="modal-body">
+				
+								@foreach($survey->questions as $question)
+
+											<div>
+												<h4>{{ $question->question }}</h4>	
+												<p>
+												 @if($question->option1 != null)
+													{{ $question->option1 }} : {{ $question->option1_votes }}  balsai</br>
+												 @endif
+												 @if($question->option2 != null)
+													{{ $question->option2 }} : {{ $question->option2_votes }} balsai</br>
+												 @endif
+												 @if($question->option3 != null)
+													{{ $question->option3 }} : {{ $question->option3_votes }} balsai</br>
+												 @endif
+												 @if($question->option4 != null)
+													{{ $question->option4 }} : {{ $question->option4_votes }} balsai
+												 @endif
+												</p>
+											</div>
+									
+									
+								@endforeach
+							  </div>
+							  <div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							  </div>
+							</div>
+
+						  </div>
+						</div>						
 					@endforeach
 				@else
 					<p>Jūs neturite nė vienos apklausos.</p>

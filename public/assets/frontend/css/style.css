@@ -9,7 +9,7 @@
 
 
 body {
-	font-family:'Open Sans', Arial, sans-serif;
+	font-family:'Roboto', Arial, sans-serif;
 	font-size:14px;
 	font-weight:300;
 	line-height:1.6em;
@@ -498,3 +498,141 @@ ul.social-network li a {
 #buttons {
 	margin-bottom: 20px;
 }
+
+#hamburger {
+    color: #6D9C91;
+    font-size: 36px;
+    cursor: pointer;	
+}
+
+#hamburger:hover {
+	color: #5a867b;
+}
+
+.copyright p {
+	margin-bottom: 0;
+}
+
+.menu li a,
+.btn-primary {
+    -webkit-transition: all 0.5s; /* Safari */
+    transition: all 0.5s;	
+}
+
+@media screen and (min-width: 991px) {
+	
+	
+	#hamburger {
+		display: none !important;
+	}
+	
+	#menu {
+		display: block !important;
+	}	
+	
+}
+
+@media screen and (max-width: 990px) {
+	
+	#hamburger {
+		display: block;
+	}
+	
+	#menu {
+		position: absolute;
+		background: white;
+		left: 0;
+		right: 0;
+		margin-top: 10px;
+		display: none;
+		padding-bottom: 0;
+	}
+	
+	#menu li {
+		float: none;
+		border-bottom: 1px solid #6D9C91;
+	}
+	
+	#menu li a {
+		margin: 0;
+		text-align:center;
+	}
+	
+	.container {
+		width: 100%;
+	}	
+	
+	.container-fluid > .navbar-header {
+		margin: 0;
+		float: left;
+		margin-top: 10px;
+	}
+	
+	.navbar-brand h1 {
+		padding-left: 0;
+	}
+	
+	.menu {
+		margin-top: 23px;
+	}
+	
+	.navbar {
+		margin-bottom: 10px;
+	}
+	
+	.content {
+		padding: 10px;
+	}
+	
+	.content p {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}	
+	
+	.breadcrumb {
+		padding: 10px;
+		margin-bottom: 10px;
+	}	
+	
+	h2, .h2 {
+		font-size: 20px;
+	}	
+	
+	.navbar {
+		position: relative;
+	}
+	
+	ul {
+		padding: 15px;
+	}
+	
+	.form-group, #buttons {
+		padding: 0 15px;
+	}
+	
+	.delete-question {
+		margin-left: 15px;
+	}
+	
+	form {
+		margin: 0;
+	}
+	
+	form[action="login"] button{
+		margin: 0 0 15px 15px;
+	}
+	
+	.align-center {
+		
+		padding: 10px;
+		margin-top: 10px;
+		margin-bottom: 10px;		
+		
+	}
+	
+	.edit-survey {
+		margin: 0 0 15px 15px;
+	}
+	
+}
+

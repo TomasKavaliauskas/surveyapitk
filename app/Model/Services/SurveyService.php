@@ -2,6 +2,7 @@
 namespace App\Model\Services;
 
 use App\Model\Contracts\SurveyServiceInterface;
+use App\Model\Contracts\QuestionServiceInterface;
 use App\Model\Contracts\SurveyRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
 
@@ -9,13 +10,15 @@ class SurveyService implements SurveyServiceInterface
 {
 
     protected $surveyRepo;
+	protected $questionService;
 	
 	private $validator;
 	private $data;
 
-    public function __construct(SurveyRepositoryInterface $surveyRepo)
+    public function __construct(SurveyRepositoryInterface $surveyRepo, QuestionServiceInterface $questionService)
     {
         $this->surveyRepo = $surveyRepo;
+		$this->questionService = $questionService;
     }
 
 	public function validate($request) {
@@ -69,7 +72,19 @@ class SurveyService implements SurveyServiceInterface
 	
 	public function userCreatedSurveys($authorId, $size = null, $offset = null) {
 		
-		return $this->surveyRepo->userCreatedSurveys($authorId, $size, $offset);
+		$surveys = $this->surveyRepo->userCreatedSurveys($authorId, $size, $offset);
+		
+		if($surveys) {
+			
+			foreach($surveys as $survey) {
+				
+				$survey->questions = $this->questionService->countVotes($survey->questions);
+				
+			}
+			
+		}
+		
+		return $surveys;
 		
 	}
 	

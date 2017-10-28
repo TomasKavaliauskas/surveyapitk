@@ -14,9 +14,9 @@ class UserRepository extends Repository implements UserRepositoryInterface
 		return 'App\Model\Models\User';
 	}
 	
-	public function getByEmail($email, $password) {
+	public function getByEmail($email) {
 		
-		$user = $this->model->where('email', '=', $email)->where('password', '=', bcrypt($password))->first();
+		$user = $this->model->where('email', '=', $email)->first();
 		
 		if($user) {
 			return $user;
@@ -32,6 +32,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
 		
 	}	
 	
+	/*
 	public function getByAuth($auth) {
 		
 		$user = $this->model->where('auth_key', $auth)->first();
@@ -42,6 +43,6 @@ class UserRepository extends Repository implements UserRepositoryInterface
 		
 		return false;		
 		
-	}
+	}*/
 
 }

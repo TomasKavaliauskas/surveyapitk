@@ -47,8 +47,10 @@ class QuestionService implements QuestionServiceInterface
 	
 	public function store() {
 		
-		$this->questionRepo->create($this->data);
+		$question = $this->questionRepo->create($this->data);
 		$this->data = [];
+		
+		return $question->id;
 		
 	}
 	

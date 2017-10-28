@@ -38,13 +38,13 @@ class AuthController extends Controller
     }
 	*/
 	public function register() {
-		
-		return view('frontend.register');
+		$data['current_page'] = request()->segment(1);
+		return view('frontend.register', $data);
 		
 	}
 	
 	public function store(Request $request) {
-		
+		$data['current_page'] = request()->segment(1);
 		if($this->userService->validate($request)) {
 			
 			$user = $this->userService->register();
@@ -59,8 +59,8 @@ class AuthController extends Controller
 	}
 	
 	public function login() {
-		
-		return view('frontend.login');
+		$data['current_page'] = request()->segment(1);
+		return view('frontend.login', $data);
 		
 	}
 	

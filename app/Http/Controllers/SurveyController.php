@@ -176,9 +176,11 @@ class SurveyController extends Controller
 		
 		if($response->getStatusCode() == 400 || $response->getStatusCode() == 401) {
 			return $response;
-		}
+		}		
 		
+		$request->merge($request->json()->all());
 		if($this->surveyService->validate($request)) {
+			
 			
 			$surveyId = $this->surveyService->store($this->userService->getUserId());
 			
@@ -254,6 +256,7 @@ class SurveyController extends Controller
 	public function update($surveyId) {
 		
 		$request = request();
+		$request->merge($request->json()->all());
 		$response = $this->validateAuth($request);
 		
 		if($response->getStatusCode() == 400 || $response->getStatusCode() == 401) {

@@ -9,10 +9,11 @@ interface UserServiceInterface
 	
 	public function errors();
 	
-	public function loginExists($email, $password);
+	public function loginExists($email);
 	
+	/*
 	public function authExists($auth);
-	
+	*/
 	public function register();	
 	
 	public function isTokenValid($token);

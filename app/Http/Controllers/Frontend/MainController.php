@@ -22,10 +22,11 @@ class MainController extends Controller
     }		
 
 	public function index() {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys', 'GET');
 		$request->headers->set('Accept', 'application/json');
 		$data['surveys'] = app()->handle($request)->original;
+		
 		
 		if(!is_object($data['surveys'])) {
 			
@@ -42,7 +43,6 @@ class MainController extends Controller
 				
 			}
 			
-			
 		}
 		
 		return view('frontend.homepage', $data);
@@ -51,12 +51,13 @@ class MainController extends Controller
 	
 	public function api() {
 		
-		return view('frontend.api');
+		$data['current_page'] = request()->segment(1);
+		return view('frontend.api', $data);
 		
 	}
 	
 	public function surveys() {
-
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys', 'GET');
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');
@@ -74,7 +75,7 @@ class MainController extends Controller
 	}
 
 	public function survey($id) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys/' . $id, 'GET');
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');
@@ -91,13 +92,13 @@ class MainController extends Controller
 	}
 	
 	public function create() {
-		
-		return view('frontend.survey-create');	
+		$data['current_page'] = request()->segment(1);
+		return view('frontend.survey-create', $data);	
 		
 	}
 	
 	public function store(Request $request) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys', 'POST', $request->all());
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');
@@ -116,7 +117,7 @@ class MainController extends Controller
 	}
 	
 	public function delete($id) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys/'.$id, 'DELETE');
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');
@@ -135,7 +136,7 @@ class MainController extends Controller
 	}
 	
 	public function edit($id) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys/' . $id, 'GET');
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'appilcation/json');
@@ -152,7 +153,7 @@ class MainController extends Controller
 	}
 	
 	public function update($id) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = request();
 		
 		$request = \Request::create('/api/surveys/' . $id, 'PUT', $request->all());
@@ -173,7 +174,7 @@ class MainController extends Controller
 	}
 	
 	public function answer($id) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = request();
 		
 		$request = \Request::create('/api/surveys/'.$id.'/answer', 'POST', $request->all());
@@ -194,7 +195,7 @@ class MainController extends Controller
 	}
 	
 	public function stats($surveyId) {
-		
+		$data['current_page'] = request()->segment(1);
 		$request = \Request::create('/api/surveys/' . $surveyId, 'GET');
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');

@@ -28,7 +28,7 @@ class AnswerService implements AnswerServiceInterface
 		];
 		
 		$this->validator = Validator::make($request->all(), [
-			'option' => 'required|min:1|max:4'
+			'option' => 'required|numeric|between:1,4'
 		]);
 		
 		return !$this->validator->fails();
@@ -37,7 +37,7 @@ class AnswerService implements AnswerServiceInterface
 	
 	public function errors() {
 		
-		return $this->validator != null ? $this->validator : null;
+		return $this->validator;
 		
 	}
 	
@@ -48,8 +48,9 @@ class AnswerService implements AnswerServiceInterface
 		$this->data['question_id'] = $questionId;
 		$this->data['survey_id'] = $surveyId;
 		
+		$this->ansSurveyRepo->create(['user_id' => $userId, 'survey_id' => $surveyId]);
+		
 		return $this->answerRepo->create($this->data)->id;
-				
 		
 	}	
 

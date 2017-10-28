@@ -19,6 +19,19 @@ $(document).ready(function() {
 		bindDelete();
 	});
 	
+	$('#hamburger').click(function(e) {
+		
+		$(this).toggleClass('active');
+		
+		if($(this).hasClass('active')) {
+			$('#menu').slideDown(500);
+			
+		}else{
+			$('#menu').slideUp(500);
+		}
+		
+	});
+	
 });
 
 function bindDelete() {

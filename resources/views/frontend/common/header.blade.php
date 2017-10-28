@@ -9,14 +9,15 @@
 							</div>
 						</div>
 						<div class="menu">
-							<ul class="nav nav-tabs" role="tablist">
-								<li role="presentation" class="active"><a href="/">Pagrindinis</a></li>
-								<li role="presentation"><a href="/api">API</a></li>		
+							<i class="fa fa-bars" id="hamburger"></i>
+							<ul id="menu" class="nav nav-tabs" role="tablist">
+								<li role="presentation" @if($current_page == '') class="active" @endif><a href="/">Pagrindinis</a></li>
+								<li role="presentation" @if($current_page == 'api') class="active" @endif><a href="/api">API</a></li>		
 								@if(!Auth::check())
-									<li role="presentation"><a href="/register">Registracija</a></li>
-									<li role="presentation"><a href="/login">Prisijungimas</a></li>
+									<li role="presentation" @if($current_page == 'register') class="active" @endif><a href="/register">Registracija</a></li>
+									<li role="presentation" @if($current_page == 'login') class="active" @endif><a href="/login">Prisijungimas</a></li>
 								@else
-									<li role="presentation"><a href="/surveys">Mano apklausos</a></li>
+									<li role="presentation" @if($current_page == 'surveys') class="active" @endif><a href="/surveys">Mano apklausos</a></li>
 									<li role="presentation"><a href="/logout">Atsijungti</a></li>
 								@endif								
 							</ul>

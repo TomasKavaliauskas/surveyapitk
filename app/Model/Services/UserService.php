@@ -51,9 +51,9 @@ class UserService implements UserServiceInterface
 		
 	}
 	
-	public function loginExists($email, $password) {
+	public function loginExists($email) {
 		
-		return $this->userRepo->getByEmail($email, $password);
+		return $this->userRepo->getByEmail($email);
 		
 	}	
 	
@@ -61,20 +61,22 @@ class UserService implements UserServiceInterface
 		
 		$this->data['access_level'] = 0;
 		
-		$user = $this->userRepo->create($this->data);
+		$this->user = $this->userRepo->create($this->data);
 		
-		\Auth::login($user);
+		\Auth::login($this->user);
 		
-		return $user;
+		return $this->user;
 		
 	}	
 	
+	/*
 	public function authExists($auth) {
 		
 		return $this->userRepo->getByAuth($auth);
 		
-	}
+	}*/
 	
+	/*
 	private function get_content($URL){
 		  $ch = curl_init();
 		  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -82,7 +84,7 @@ class UserService implements UserServiceInterface
 		  $data = curl_exec($ch);
 		  curl_close($ch);
 		  return $data;
-	}
+	}*/
 	
 	public function getUserId() {
 		

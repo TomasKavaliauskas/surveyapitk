@@ -44,7 +44,7 @@
 					<h4>Apklausų gavimas</h4>
 				</div>					
 				
-				<p>Norėdami gauti apklausas, siųskite GET užklausą adresu: <code>http://surveyapi.tk/api/surveys</code></p>
+				<p>Norėdami gauti apklausas, siųskite GET užklausą adresu: <code><pre>http://surveyapi.tk/api/surveys</pre></code></p>
 				
 				<p><strong>Reikalingos antraštės:</strong></p>
 				<ul>
@@ -328,7 +328,7 @@
 					<h4>Atsakymas į apklausą</h4>
 				</div>					
 				
-				<p>Norėdami atsakyti į apklausą, siųskite POST užklausą adresu: <code>http://surveyapi.tk/api/surveys/{id}/answer</code></p>
+				<p>Norėdami atsakyti į apklausą, siųskite POST užklausą adresu: <code><pre>http://surveyapi.tk/api/surveys/{id}/answer</pre></code></p>
 			
 				<p><strong>Reikalingos antraštės:</strong></p>
 				<ul>
