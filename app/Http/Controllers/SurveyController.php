@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Socialite;
 use App\Model\Contracts\SurveyServiceInterface;
 use App\Model\Contracts\UserServiceInterface;
 use App\Model\Contracts\QuestionServiceInterface;
@@ -30,40 +31,6 @@ class SurveyController extends Controller
 		$this->ansSurveyRepo = $ansSurveyRepo;
 		
     }
-
-	public function login(Request $request) {
-		
-		$response = new Response();
-		
-		if($request->input('email') == null) {
-			
-			$response->setContent(['error' => "No email given."]);
-			$response->setStatusCode(400);
-			return $response;			
-			
-		}
-		
-		if($request->input('password') == null) {
-			
-			$response->setContent(['error' => "No password given."]);
-			$response->setStatusCode(400);
-			return $response;			
-			
-		}
-		
-		if(!\Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
-			
-			$response->setContent(['error' => "No user with such credentials"]);
-			$response->setStatusCode(401);
-			return $response;			
-			
-		}
-		
-		$response->setContent(['token' => $this->userService->get(\Auth::id())->oauth_access_token->id]);
-		$response->setStatusCode(200);
-		return $response;
-		
-	}
 
 	public function index(Request $request)
 	{
@@ -94,17 +61,17 @@ class SurveyController extends Controller
 			return $response;
 			
 		}
-		
+
 		$tokenCheck = $this->userService->isTokenValid($request->header('AuthenticationToken'));
-		
-		if($tokenCheck !== true) {
+
+		if($tokenCheck === 'Token is invalid') {
 			
 			$response->setContent(['error' => $tokenCheck]);
 			$response->setStatusCode(401);
 			return $response;
 			
 		}
-		
+
 		if($request->hasHeader('author')) {
 
 			$response->setContent($this->surveyService->userCreatedSurveys($this->userService->getUserId(), $size, $offset));
@@ -132,8 +99,8 @@ class SurveyController extends Controller
 		}
 		
 		$tokenCheck = $this->userService->isTokenValid($request->header('AuthenticationToken'));
-		
-		if($tokenCheck !== true) {
+
+		if($tokenCheck === 'Token is invalid') {
 			
 			$response->setContent(['error' => $tokenCheck]);
 			$response->setStatusCode(401);
@@ -235,10 +202,10 @@ class SurveyController extends Controller
 		}
 
 		$userId = $this->userService->getUserId();
-		
+
 		$survey = $this->surveyService->get($surveyId);
 		
-		if($survey->user->id == $userId) {
+		if($survey->user->email == $this->userService->get($userId)->email) {
 			
 			$this->surveyService->delete($surveyId);
 			$response->setContent(['success' => true]);
@@ -267,7 +234,7 @@ class SurveyController extends Controller
 		
 		$survey = $this->surveyService->get($surveyId);
 		
-		if($survey->user->id == $userId) {
+		if($survey->user->email == $this->userService->get($userId)->email) {
 			
 			if($this->surveyService->validate($request)) {
 			
@@ -293,8 +260,9 @@ class SurveyController extends Controller
 	public function answer($surveyId) {
 		
 		$request = request();
+		$request->merge($request->json()->all());
 		$response = $this->validateAuth($request);
-		
+
 		if($response->getStatusCode() == 400 || $response->getStatusCode() == 401) {
 			return $response;
 		}

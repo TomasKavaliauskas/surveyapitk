@@ -3,7 +3,6 @@ namespace App\Model\Services;
 
 use App\Model\Contracts\UserServiceInterface;
 use App\Model\Contracts\UserRepositoryInterface;
-use App\Model\Contracts\OauthRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Model\Contracts\AnsweredSurveyRepositoryInterface;
 
@@ -12,44 +11,19 @@ class UserService implements UserServiceInterface
 
     protected $userRepo;
 	protected $ansSurveyRepo;
-	protected $authRepo;
 	
 	private $validator;
 	private $data;
 	private $id;
 	private $user;
 
-    public function __construct(UserRepositoryInterface $userRepo, AnsweredSurveyRepositoryInterface $ansSurveyRepo, OauthRepositoryInterface $authRepo)
+    public function __construct(UserRepositoryInterface $userRepo, AnsweredSurveyRepositoryInterface $ansSurveyRepo)
     {
 		
         $this->userRepo = $userRepo;
 		$this->ansSurveyRepo = $ansSurveyRepo;
-		$this->authRepo = $authRepo;
 		
     }
-	
-	public function validate($request) {
-		
-		$this->data['name'] = $request->input('name');
-		$this->data['email'] = $request->input('email');
-		$this->data['password'] = bcrypt($request->input('password'));
-		
-		$this->validator = Validator::make($request->all(), [
-			'name' => 'required',
-			'email' => 'required|unique:users|email',
-			'password' => 'required',
-			'password_match' => 'required|same:password'
-		]);
-		
-		return !$this->validator->fails();		
-		
-	}
-	
-	public function errors(){
-		
-		return $this->validator != null ? $this->validator : null;
-		
-	}
 	
 	public function loginExists($email) {
 		
@@ -57,13 +31,23 @@ class UserService implements UserServiceInterface
 		
 	}	
 	
-	public function register() {
+	public function register($name = null, $email = null, $auth_key = null) {
+		
+		if($name) {
+			$this->data['name'] = $name;
+		}
+		
+		if($email) {
+			$this->data['email'] = $email;
+		}
+
+		if($auth_key) {
+			$this->data['auth_key'] = $auth_key;
+		}		
 		
 		$this->data['access_level'] = 0;
 		
 		$this->user = $this->userRepo->create($this->data);
-		
-		\Auth::login($this->user);
 		
 		return $this->user;
 		
@@ -76,7 +60,7 @@ class UserService implements UserServiceInterface
 		
 	}*/
 	
-	/*
+	
 	private function get_content($URL){
 		  $ch = curl_init();
 		  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -84,7 +68,7 @@ class UserService implements UserServiceInterface
 		  $data = curl_exec($ch);
 		  curl_close($ch);
 		  return $data;
-	}*/
+	}
 	
 	public function getUserId() {
 		
@@ -99,17 +83,16 @@ class UserService implements UserServiceInterface
 	}
 	
 	public function isTokenValid($token) {
-		
-		$auth = $this->authRepo->get($token);
-		
-		if($auth) {
-			
-			$this->user = $this->get($auth->user_id);
-			return true;
-			
+
+		$user = $this->get_content('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $token);
+		$user = json_decode($user);
+
+		if($user && isset($user->id)) {
+			$this->user = $this->userRepo->getByAuth($user->id);
+			return $this->user;
 		}
-		
 		return "Token is invalid";
+		
 		
 	}
 	

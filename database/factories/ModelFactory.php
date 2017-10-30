@@ -30,9 +30,10 @@ $factory->define(App\Model\Models\User::class, function (Faker\Generator $faker,
 {
 
     return [
-        'email' => $faker->email,
+        'email' => isset($data['email']) ? $data['email'] : $faker->email,
         'name' => $faker->name(),
 		'access_level' => $data['access_level'],
+		'auth_key' => '109511313140306130594'
     ];
 
 });

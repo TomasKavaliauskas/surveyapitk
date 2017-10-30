@@ -25,26 +25,24 @@ class SurveyControllerTest extends TestCase
 	public function setUp() {
 		
 		parent::setUp();
+		global $argv, $argc;
+		//$this->token = 'ya29.Gl30BA__NSUdPWDsDkUhOnHRxkyvVdYJPsUHmB6Zypgxq6DWshfZNya1PntNID1Xypezb5MHOOLUeWSF4swNHOV-gdCr8g84gSG4pRYz6R-rna6ZBL14ke6uRyYDv8Y';
+		$this->token = getenv('token');
 		$this->surveyService = App::make(SurveyServiceInterface::class);
 		$this->surveyRepo = App::make(SurveyRepositoryInterface::class);
-		$this->user = factory(App\Model\Models\User::class)->create(['access_level' => 0]);
-		$this->user->createToken('Authentication');		
+		$this->user = factory(App\Model\Models\User::class)->create(['access_level' => 0, 'email' => 'tokavaliauskas@gmail.com']);	
 		$this->survey = factory(App\Model\Models\Survey::class)->create(['user_id' => $this->user->id, 'icon' => 'fa-laptop']);
 		$this->question = factory(App\Model\Models\Question::class)->create(['option1' => 1, 'option2' => 2, 'option3' => null, 'option4' => null,  'survey_id' => $this->survey->id]);
 
 		
 	}
 	
-	public function test_redirect_if_authenticated() {
-		
-		$response = $this->call('GET', \URL::to('/register'));
-
-		$this->assertEquals(200, $response->getStatusCode());	
-		
+	
+	public function test_redirect_if_authenticated() {		
 		
 		$this->be($this->user);
 		
-		$response = $this->call('GET', \URL::to('/register'));
+		$response = $this->call('GET', \URL::to('/api/surveys/login'));
 
 		$this->assertEquals(302, $response->getStatusCode());			
 		
@@ -91,7 +89,7 @@ class SurveyControllerTest extends TestCase
     {
         
 		$request = \Request::create('/api/surveys/' . $this->survey->id, 'GET');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -103,7 +101,7 @@ class SurveyControllerTest extends TestCase
     {
         
 		$request = \Request::create('/api/surveys/' . 999, 'GET');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -141,7 +139,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['title' => 'abc', 'description' => 'abc']);
         
 		$request = \Request::create('/api/surveys', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -156,7 +154,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['title' => 'abc', 'description' => 'abc', 'icon' => 'fa-laptop']);
         
 		$request = \Request::create('/api/surveys', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -171,7 +169,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['title' => 'abc', 'description' => 'abc', 'icon' => 'fa-laptop', 'question_-100_title' => 'Klausimas', 'question_-100_option_1' => 'abc', 'question_-100_option_2' => 'aabc']);
         
 		$request = \Request::create('/api/surveys', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -210,7 +208,7 @@ class SurveyControllerTest extends TestCase
 		$survey2 = factory(App\Model\Models\Survey::class)->create(['user_id' => $user2->id, 'icon' => 'fa-laptop']);
         
 		$request = \Request::create('/api/surveys/'.$survey2->id, 'DELETE');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -220,9 +218,10 @@ class SurveyControllerTest extends TestCase
 	
 	public function test_when_tries_to_delete_his_own_survey_gets_200()
     {
-        
+
+		//dd($this->user->id == $this->survey->user->id);
 		$request = \Request::create('/api/surveys/'.$this->survey->id, 'DELETE');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -264,7 +263,7 @@ class SurveyControllerTest extends TestCase
 		$survey2 = factory(App\Model\Models\Survey::class)->create(['user_id' => $user2->id, 'icon' => 'fa-laptop']);
         
 		$request = \Request::create('/api/surveys/'.$survey2->id, 'PUT');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -280,7 +279,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['title' => 'abc', 'description' => 'abc']);		
 		
 		$request = \Request::create('/api/surveys/'.$this->survey->id, 'PUT', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -295,7 +294,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['title' => 'abc', 'description' => 'abc', 'icon' => 'fa-laptop']);		
 		
 		$request = \Request::create('/api/surveys/'.$this->survey->id, 'PUT', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -332,7 +331,7 @@ class SurveyControllerTest extends TestCase
     {
         
 		$request = \Request::create('/api/surveys/900/answer', 'POST');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -347,7 +346,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['answer_' . $this->question->id => '']);
         
 		$request = \Request::create('/api/surveys/'.$this->survey->id.'/answer', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -362,7 +361,7 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['answer_' . $this->question->id => 1]);
         
 		$request = \Request::create('/api/surveys/'.$this->survey->id.'/answer', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);		
 		
@@ -377,12 +376,12 @@ class SurveyControllerTest extends TestCase
 		$request_data->merge(['answer_' . $this->question->id => 1]);
         
 		$request = \Request::create('/api/surveys/'.$this->survey->id.'/answer', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);
         
 		$request = \Request::create('/api/surveys/'.$this->survey->id.'/answer', 'POST', $request_data->all());
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);	
 		
@@ -434,7 +433,7 @@ class SurveyControllerTest extends TestCase
         
 		$request = \Request::create('/api/surveys', 'GET');
 		$request->headers->set('author', 'true');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);	
 		
@@ -446,7 +445,7 @@ class SurveyControllerTest extends TestCase
     {
         
 		$request = \Request::create('/api/surveys', 'GET');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);	
 		
@@ -458,71 +457,7 @@ class SurveyControllerTest extends TestCase
     {
         
 		$request = \Request::create('/api/surveys?size=10&offset=0', 'GET');
-		$request->headers->set('AuthenticationToken', $this->user->oauth_access_token->id);
-		$request->headers->set('Accept', 'application/json');
-		$response = app()->handle($request);	
-		
-		$this->assertEquals(200, $response->getStatusCode());
-		
-    }	
-	
-	/* LOGIN */
-	
-	public function test_when_user_tries_to_login_with_no_email_gets_400()
-    {
-        
-		$request = \Request::create('/api/surveys/login', 'POST');
-		$request->headers->set('Accept', 'application/json');
-		$response = app()->handle($request);	
-		
-		$this->assertEquals(400, $response->getStatusCode());
-		
-    }	
-	
-	public function test_when_user_tries_to_login_with_no_password_gets_400()
-    {
-		
-		$request_data = new Request();
-		$request_data->merge(['email' => 'abc@gmail.com']);		
-        
-		$request = \Request::create('/api/surveys/login', 'POST', $request_data->all());
-		$request->headers->set('Accept', 'application/json');
-		$response = app()->handle($request);	
-		
-		$this->assertEquals(400, $response->getStatusCode());
-		
-    }		
-	
-	public function test_when_user_tries_to_login_with_wrong_credentials_gets_401()
-    {
-		
-		$this->user->email = 'abc@gmail.com';
-		$this->user->password = bcrypt('abcd');
-		$this->user->save();
-		
-		$request_data = new Request();
-		$request_data->merge(['email' => 'abc@gmail.com', 'password' => 'abc']);		
-        
-		$request = \Request::create('/api/surveys/login', 'POST', $request_data->all());
-		$request->headers->set('Accept', 'application/json');
-		$response = app()->handle($request);	
-		
-		$this->assertEquals(401, $response->getStatusCode());
-		
-    }
-	
-	
-	public function test_when_user_tries_to_login_with_correct_credentials_gets_200()
-    {
-		
-		$this->user->email = 'abc@gmail.com';
-		$this->user->password = bcrypt('abcd');
-		$this->user->save();
-		
-		$request_data = new Request();
-		$request_data->merge(['email' => 'abc@gmail.com', 'password' => 'abcd']);		
-        
-		$request = \Request::create('/api/surveys/login', 'POST', $request_data->all());
+		$request->headers->set('AuthenticationToken', $this->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request);	
 		

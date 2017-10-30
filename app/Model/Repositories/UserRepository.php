@@ -32,7 +32,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
 		
 	}	
 	
-	/*
+	
 	public function getByAuth($auth) {
 		
 		$user = $this->model->where('auth_key', $auth)->first();
@@ -43,6 +43,6 @@ class UserRepository extends Repository implements UserRepositoryInterface
 		
 		return false;		
 		
-	}*/
+	}
 
 }

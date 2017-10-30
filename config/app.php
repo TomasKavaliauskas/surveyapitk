@@ -188,7 +188,6 @@ return [
 		App\Model\ServiceProviders\AnsweredSurveyRepositoryProvider::class,		
 		Laravel\Socialite\SocialiteServiceProvider::class,
 		Laravel\Passport\PassportServiceProvider::class,
-		App\Model\ServiceProviders\OauthRepositoryProvider::class,	
 		
 		
     ],

@@ -85,7 +85,6 @@ class SurveyServiceTest extends TestCase
 		$survey_id = $this->surveyService->store($this->user->id);
 		
 		$this->assertNotNull($survey_id);
-		
 		$this->assertEquals(1, count($this->surveyService->all(9999, 0)));
 		
     }

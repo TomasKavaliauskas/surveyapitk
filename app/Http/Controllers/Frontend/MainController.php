@@ -27,7 +27,7 @@ class MainController extends Controller
 		$request->headers->set('Accept', 'application/json');
 		$data['surveys'] = app()->handle($request)->original;
 		
-		
+
 		if(!is_object($data['surveys'])) {
 			
 			$data['surveys'] = [];
