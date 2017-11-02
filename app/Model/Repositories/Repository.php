@@ -41,10 +41,17 @@ abstract class Repository implements RepositoryInterface {
 		
 	}
 	
+	
 	public function delete($id) {
 		
 		$this->model->find($id)->delete();
 		
 	}
+	/*
+	public function delete() {
+		
+		$this->model->find(1)->delete();
+		
+	}	*/
 
 }

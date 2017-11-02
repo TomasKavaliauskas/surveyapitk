@@ -26,7 +26,6 @@ class MainController extends Controller
 		$request = \Request::create('/api/surveys', 'GET');
 		$request->headers->set('Accept', 'application/json');
 		$data['surveys'] = app()->handle($request)->original;
-		
 
 		if(!is_object($data['surveys'])) {
 			
@@ -104,15 +103,20 @@ class MainController extends Controller
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request)->original;		
 		
-		if(isset($response['success'])) {
-			
-			return redirect('http://surveyapi.tk/surveys');
-			
-		}else{
+		if(is_array($response)) {
+				
+			if(isset($response['success'])) {
+				
+				return redirect('http://surveyapi.tk/surveys');
+				
+			}else{
 
-			return redirect('http://surveyapi.tk/surveys/create')->withInput()->with('error', $response['error']);
-			
+				return redirect('http://surveyapi.tk/surveys/create')->withInput()->with('error', $response['error']);
+				
+			}
 		}
+		
+		return redirect('http://surveyapi.tk/surveys/create')->withInput()->with('error', $response['error']);
 		
 	}
 	
@@ -122,16 +126,22 @@ class MainController extends Controller
 		$request->headers->set('AuthenticationToken', json_decode(\Cookie::get('authToken'))->token);
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request)->original;
+		
+		if(is_array($response)) {
 
-		if(isset($response['success'])) {
-			
-			return redirect('http://surveyapi.tk/surveys')->with('success', "Apklausa sėkmingai ištrinta");
-			
-		}else{
+			if(isset($response['success'])) {
+				
+				return redirect('http://surveyapi.tk/surveys')->with('success', "Apklausa sėkmingai ištrinta");
+				
+			}else{
 
-			return redirect('http://surveyapi.tk/surveys')->with('error', $response['error']);
-			
-		}		
+				return redirect('http://surveyapi.tk/surveys')->with('error', $response['error']);
+				
+			}	
+				
+		}
+		
+		return redirect('http://surveyapi.tk/surveys')->with('error', $response['error']);
 		
 	}
 	
@@ -161,15 +171,21 @@ class MainController extends Controller
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request)->original;		
 		
-		if(isset($response['success'])) {
-			
-			return redirect('http://surveyapi.tk/surveys');
-			
-		}else{
+		if(is_array($response)) {		
+		
+			if(isset($response['success'])) {
+				
+				return redirect('http://surveyapi.tk/surveys');
+				
+			}else{
 
-			return redirect('http://surveyapi.tk/surveys/edit')->withInput()->with('error', $response['error']);
-			
-		}		
+				return redirect('http://surveyapi.tk/surveys/edit')->withInput()->with('error', $response['error']);
+				
+			}
+				
+		}
+		
+		return redirect('http://surveyapi.tk/surveys/edit')->withInput()->with('error', $response['error']);
 		
 	}
 	
@@ -182,7 +198,7 @@ class MainController extends Controller
 		$request->headers->set('Accept', 'application/json');
 		$response = app()->handle($request)->original;		
 		
-		if(isset($response['success'])) {
+		if(is_array($response) && isset($response['success'])) {
 			
 			return redirect('http://surveyapi.tk/');
 			

@@ -9,12 +9,12 @@ use App\Model\Models\Survey;
 class SurveyRepository extends Repository implements SurveyRepositoryInterface
 {
 
-	function model()
+	public function model()
 	{
 		return 'App\Model\Models\Survey';
 	}
 	
-	function all($size = null, $offset = null) {
+	public function all($size = null, $offset = null) {
 		
 		return $this->model->offset($offset)->limit($size)->get();
 		
@@ -26,7 +26,7 @@ class SurveyRepository extends Repository implements SurveyRepositoryInterface
 		
 	}	
 	
-	function userCreatedSurveys($authorId, $size = null, $offset = null) {
+	public function userCreatedSurveys($authorId, $size = null, $offset = null) {
 		
 		return $this->model->where('user_id', $authorId)->with('questions')->offset($offset)->limit($size)->get();
 		

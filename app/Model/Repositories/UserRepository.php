@@ -9,7 +9,7 @@ use App\Model\Models\User;
 class UserRepository extends Repository implements UserRepositoryInterface
 {
 
-	function model()
+	public function model()
 	{
 		return 'App\Model\Models\User';
 	}

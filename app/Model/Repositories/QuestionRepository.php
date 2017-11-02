@@ -9,7 +9,7 @@ use App\Model\Models\Answer;
 class QuestionRepository extends Repository implements QuestionRepositoryInterface
 {
 
-	function model()
+	public function model()
 	{
 		return 'App\Model\Models\Question';
 	}

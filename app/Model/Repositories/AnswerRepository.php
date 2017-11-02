@@ -9,7 +9,7 @@ use App\Model\Models\Answer;
 class AnswerRepository extends Repository implements AnswerRepositoryInterface
 {
 
-	function model()
+	public function model()
 	{
 		return 'App\Model\Models\Answer';
 	}

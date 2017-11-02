@@ -30,51 +30,6 @@ class AuthController extends Controller
         $this->middleware('guest')->except('logout');
     }	
 
-
-	
-	public function register() {
-		$data['current_page'] = request()->segment(1);
-		return view('frontend.register', $data);
-		
-	}
-	
-	public function store(Request $request) {
-		$data['current_page'] = request()->segment(1);
-		if($this->userService->validate($request)) {
-			
-			$user = $this->userService->register();
-			$token = $user->createToken('Authentication')->accessToken;
-			\Cookie::queue('authToken', json_encode(['token' => $token]), 36000);
-			return redirect('/');
-			
-		}
-		
-		return back()->withInput()->with('error', 'Ne visi laukai uzpildyti');
-		
-	}
-	
-	public function login() {
-		$data['current_page'] = request()->segment(1);
-		return view('frontend.login', $data);
-		
-	}
-	
-	public function logUserIn(Request $request) {
-		
-		if (\Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
-			
-			$token = $this->userService->get(\Auth::id())->oauth_access_token->id;
-			\Cookie::queue('authToken', json_encode(['token' => $token]), 36000);
-            return redirect('/');
-			
-        }else{
-			
-			return back()->withInput()->with('error', 'Nera tokio vartotojo');
-			
-		}
-		
-	}
-	
     public function redirectToGoogleProvider()
     {
 		
